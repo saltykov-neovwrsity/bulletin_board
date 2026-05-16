@@ -34,7 +34,12 @@ cd bulletin_board
 npm install
 ```
 
-### 3. Налаштування бази даних (Prisma)
+### 3. Налаштування середовища та бази даних
+Створіть файл `.env` на основі `.env.example`:
+```bash
+cp .env.example .env
+```
+
 У проєкті використовується SQLite, тому додаткового налаштування сервера БД не потрібно. Просто виконайте міграції:
 ```bash
 npx prisma migrate dev --name init
@@ -53,7 +58,10 @@ bulletin_board/
 ├── prisma/             # Схема БД та міграції Prisma (schema.prisma)
 ├── public/             # Статичні файли (styles.css, зображення)
 ├── views/              # EJS шаблони (index.ejs, new.ejs, announcement.ejs тощо)
+├── .env.example        # Приклад змінних середовища (шаблон для .env)
+├── .gitignore          # Файли, що ігноруються системою Git
 ├── app.js              # Головний файл сервера (налаштування Express, роути)
+├── package-lock.json   # Зафіксовані точні версії залежностей
 ├── package.json        # Залежності та скрипти проєкту
 └── README.md           # Документація проєкту
 ```
