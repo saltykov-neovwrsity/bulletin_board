@@ -25,7 +25,7 @@
 
 ### 1. Клонування репозиторію
 ```bash
-git clone <url-вашого-репозиторію>
+git clone https://github.com/saltykov-neovwrsity/bulletin_board.git
 cd bulletin_board
 ```
 
