@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Додати оголошення - Дошка оголошень</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <a href="/" class="logo">📢 Дошка оголошень</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="form-container">
+            <h1 class="page-title">Створити оголошення</h1>
+            <form action="/announcements" method="POST" class="announcement-form">
+                
+                <div class="form-group">
+                    <label class="form-label">Категорія <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="category" value="sale" <%= data?.category === 'sale' ? 'checked' : '' %> required>
+                            📦 Продаж
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="category" value="service" <%= data?.category === 'service' ? 'checked' : '' %>>
+                            🔧 Послуги
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="category" value="job" <%= data?.category === 'job' ? 'checked' : '' %>>
+                            💼 Робота
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="category" value="other" <%= data?.category === 'other' ? 'checked' : '' %>>
+                            📌 Інше
+                        </label>
+                    </div>
+                    <% if (errors?.category) { %>
+                        <span class="error-msg"><%= errors.category %></span>
+                    <% } %>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="title">Назва оголошення <span class="required">*</span></label>
+                    <input type="text" id="title" name="title" class="form-input <%= errors?.title ? 'input-error' : '' %>" 
+                           placeholder="Коротка назва оголошення" value="<%= data?.title || '' %>" required minlength="5" maxlength="100">
+                    <% if (errors?.title) { %>
+                        <span class="error-msg"><%= errors.title %></span>
+                    <% } %>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="description">Опис <span class="required">*</span></label>
+                    <textarea id="description" name="description" class="form-textarea <%= errors?.description ? 'input-error' : '' %>" 
+                              placeholder="Детальний опис оголошення..." rows="6" required minlength="10"><%= data?.description || '' %></textarea>
+                    <% if (errors?.description) { %>
+                        <span class="error-msg"><%= errors.description %></span>
+                    <% } %>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="price">Ціна (грн) <span class="required">*</span></label>
+                    <input type="number" id="price" name="price" class="form-input <%= errors?.price ? 'input-error' : '' %>" 
+                           min="0" step="0.01" placeholder="0.00" value="<%= data?.price || '' %>" required>
+                    <% if (errors?.price) { %>
+                        <span class="error-msg"><%= errors.price %></span>
+                    <% } %>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="contactInfo">Контактна інформація <span class="required">*</span></label>
+                    <input type="text" id="contactInfo" name="contactInfo" class="form-input <%= errors?.contactInfo ? 'input-error' : '' %>" 
+                           placeholder="Email або телефон" value="<%= data?.contactInfo || '' %>" required minlength="5">
+                    <% if (errors?.contactInfo) { %>
+                        <span class="error-msg"><%= errors.contactInfo %></span>
+                    <% } %>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="pin">PIN-код для видалення <span class="required">*</span></label>
+                    <input type="password" id="pin" name="pin" class="form-input <%= errors?.pin ? 'input-error' : '' %>" 
+                           placeholder="Наприклад: 1234" value="" required pattern="\d{4}" maxlength="4" minlength="4">
+                    <span class="error-msg" style="color: var(--text-muted); font-size: 0.8rem; display: block; margin-top: 4px;">Запам'ятайте цей код, він знадобиться для видалення оголошення.</span>
+                    <% if (errors?.pin) { %>
+                        <span class="error-msg"><%= errors.pin %></span>
+                    <% } %>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/" class="btn btn-outline">Скасувати</a>
+                    <button type="submit" class="btn btn-primary">Опублікувати</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= announcement.title %> - Дошка оголошень
+    </title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <a href="/" class="logo">📢 Дошка оголошень</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="details-container">
+            <a href="/" class="back-link">← Повернутися на головну</a>
+
+            <div class="details-card">
+                <div class="details-header">
+                    <span class="category-badge <%= announcement.category %>">
+                        <% if (announcement.category==='sale' ) { %>📦 Продаж<% } %>
+                                <% if (announcement.category==='service' ) { %>🔧 Послуги<% } %>
+                                        <% if (announcement.category==='job' ) { %>💼 Робота<% } %>
+                                                <% if (announcement.category==='other' ) { %>📌 Інше<% } %>
+                    </span>
+                    <h1 class="details-title">
+                        <%= announcement.title %>
+                    </h1>
+
+                    <div class="details-meta">
+                        <span class="details-price">Ціна: <%= announcement.price.toLocaleString('uk-UA') %> грн</span>
+                        <span class="details-date">Опубліковано: <%= new
+                                Date(announcement.createdAt).toLocaleDateString('uk-UA', { year: 'numeric' ,
+                                month: 'long' , day: 'numeric' }) %></span>
+                    </div>
+                </div>
+
+                <div class="details-body">
+                    <p class="details-desc">
+                        <%= announcement.description %>
+                    </p>
+                </div>
+
+                <div class="details-contacts">
+                    <h3>Контакти:</h3>
+                    <p>
+                        <%= announcement.contactInfo %>
+                    </p>
+                </div>
+
+                <div class="details-footer">
+                    <button id="delete-btn" class="btn btn-danger">Видалити</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const deleteBtn = document.querySelector('#delete-btn');
+        const announcementId = <%= announcement.id %>;
+
+        deleteBtn.addEventListener('click', async () => {
+            const isConfirmed = confirm('Ви впевнені, що хочете видалити це оголошення?');
+            
+            if (!isConfirmed) {
+                return; // User cancelled
+            }
+
+            const pin = prompt('Введіть 4-значний PIN-код для видалення оголошення:');
+
+            if (pin === null) {
+                return; // User cancelled
+            }
+
+            if (!/^\d{4}$/.test(pin)) {
+                alert('PIN-код має складатися з 4 цифр');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/announcements/${announcementId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ pin })
+                });
+
+                if (response.ok || response.status === 204) {
+                    window.location.href = '/';
+                } else if (response.status === 403) {
+                    alert('Помилка: Невірний PIN-код!');
+                } else {
+                    alert('Помилка при видаленні');
+                }
+            } catch (error) {
+                alert('Помилка при видаленні');
+            }
+        });
+    </script>
+</body>
+
+</html>

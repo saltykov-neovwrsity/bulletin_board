@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дошка оголошень</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <a href="/" class="logo">📢 Дошка оголошень</a>
+            <a href="/announcements" class="btn btn-primary">Додати оголошення</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="controls-section">
+            <form action="/" method="GET" class="search-form">
+                <input type="text" name="search" placeholder="Шукати оголошення..." value="<%= search %>" class="search-input">
+                
+                <select name="sort" class="sort-select" onchange="this.form.submit()">
+                    <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Новіші спочатку</option>
+                    <option value="oldest" <%= sort === 'oldest' ? 'selected' : '' %>>Старіші спочатку</option>
+                </select>
+                
+                <button type="submit" class="btn btn-secondary">Знайти</button>
+            </form>
+        </section>
+
+        <section class="announcements-grid">
+            <% if (announcements && announcements.length > 0) { %>
+                <% announcements.forEach(ann => { %>
+                    <article class="card">
+                        <div class="card-header">
+                            <span class="category-badge <%= ann.category %>">
+                                <% if (ann.category === 'sale') { %>📦 Продаж<% } %>
+                                <% if (ann.category === 'service') { %>🔧 Послуги<% } %>
+                                <% if (ann.category === 'job') { %>💼 Робота<% } %>
+                                <% if (ann.category === 'other') { %>📌 Інше<% } %>
+                            </span>
+                            <span class="price"><%= ann.price.toLocaleString('uk-UA') %> грн</span>
+                        </div>
+                        <h3 class="card-title"><%= ann.title %></h3>
+                        <p class="card-desc"><%= ann.description.length > 100 ? ann.description.substring(0, 100) + '...' : ann.description %></p>
+                        <div class="card-footer">
+                            <span class="date"><%= new Date(ann.createdAt).toLocaleDateString('uk-UA', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+                            <a href="/announcements/<%= ann.id %>" class="btn btn-outline">Детальніше</a>
+                        </div>
+                    </article>
+                <% }) %>
+            <% } else { %>
+                <div class="empty-state">
+                    <h2>Оголошень не знайдено 😕</h2>
+                    <p>Спробуйте змінити умови пошуку або створіть нове оголошення.</p>
+                </div>
+            <% } %>
+        </section>
+
+        <% if (totalPages > 1) { %>
+            <nav class="pagination">
+                <% if (currentPage > 1) { %>
+                    <a href="/?page=<%= currentPage - 1 %>&search=<%= search %>&sort=<%= sort %>" class="btn btn-outline">Попередня</a>
+                <% } else { %>
+                    <button class="btn btn-outline" disabled>Попередня</button>
+                <% } %>
+                
+                <div class="page-numbers">
+                    <% for(let i = 1; i <= totalPages; i++) { %>
+                        <a href="/?page=<%= i %>&search=<%= search %>&sort=<%= sort %>" class="page-number <%= i === currentPage ? 'active' : '' %>"><%= i %></a>
+                    <% } %>
+                </div>
+
+                <% if (currentPage < totalPages) { %>
+                    <a href="/?page=<%= currentPage + 1 %>&search=<%= search %>&sort=<%= sort %>" class="btn btn-outline">Наступна</a>
+                <% } else { %>
+                    <button class="btn btn-outline" disabled>Наступна</button>
+                <% } %>
+            </nav>
+        <% } %>
+    </main>
+</body>
+</html>
